@@ -1,4 +1,4 @@
-# homelab-repoflow-smoke
+# homelab-registry-smoke
 
 CI smoke repository for validating RepoFlow publish/pull workflows using real project directories that Jenkins builds.
 
