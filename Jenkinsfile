@@ -19,21 +19,39 @@ spec:
   - name: node
     image: node:20-bookworm
     command: ['sleep', '3600']
+    resources:
+      requests: { cpu: "100m", memory: "256Mi" }
+      limits:   { cpu: "500m", memory: "512Mi" }
   - name: python
     image: python:3.12-bookworm
     command: ['sleep', '3600']
+    resources:
+      requests: { cpu: "100m", memory: "256Mi" }
+      limits:   { cpu: "500m", memory: "512Mi" }
   - name: golang
     image: golang:1.22
     command: ['sleep', '3600']
+    resources:
+      requests: { cpu: "200m", memory: "512Mi" }
+      limits:   { cpu: "1000m", memory: "1Gi" }
   - name: helm
     image: alpine/helm:3.15.2
     command: ['sleep', '3600']
+    resources:
+      requests: { cpu: "50m", memory: "128Mi" }
+      limits:   { cpu: "250m", memory: "256Mi" }
   - name: curl
     image: curlimages/curl:8.10.1
     command: ['sleep', '3600']
+    resources:
+      requests: { cpu: "50m", memory: "128Mi" }
+      limits:   { cpu: "250m", memory: "256Mi" }
   - name: docker
     image: docker:27-cli
     command: ['sleep', '3600']
+    resources:
+      requests: { cpu: "100m", memory: "256Mi" }
+      limits:   { cpu: "500m", memory: "512Mi" }
 '''
     }
   }
