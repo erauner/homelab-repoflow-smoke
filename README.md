@@ -16,8 +16,14 @@ CI smoke repository for validating RepoFlow publish/pull workflows using real pr
 
 - `REPOFLOW_BASE_URL` (default: `https://repoflow.erauner.dev`)
 - `REPOFLOW_WORKSPACE` (default: `homelab`)
-- `REPOFLOW_PAT` (required)
 - `RUN_DOCKER` (default: `false`)
+
+## Jenkins credential
+
+- Credential ID: `repoflow-credentials`
+- Type: `Username with password`
+- Username: `token`
+- Password: RepoFlow PAT
 
 ## Notes
 

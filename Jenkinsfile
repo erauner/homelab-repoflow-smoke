@@ -65,32 +65,28 @@ spec:
   parameters {
     string(name: 'REPOFLOW_BASE_URL', defaultValue: 'https://repoflow.erauner.dev', description: 'RepoFlow base URL')
     string(name: 'REPOFLOW_WORKSPACE', defaultValue: 'homelab', description: 'RepoFlow workspace name')
-    password(name: 'REPOFLOW_PAT', defaultValue: '', description: 'RepoFlow personal access token')
     booleanParam(name: 'RUN_DOCKER', defaultValue: false, description: 'Enable Docker push/pull check (requires docker daemon access)')
   }
 
   environment {
     REPOFLOW_BASE_URL = "${params.REPOFLOW_BASE_URL}"
     REPOFLOW_WORKSPACE = "${params.REPOFLOW_WORKSPACE}"
-    REPOFLOW_PAT = "${params.REPOFLOW_PAT}"
     SMOKE_RUN_ID = "${env.BUILD_NUMBER}-${env.GIT_COMMIT?.take(8) ?: 'dev'}"
   }
 
   stages {
     stage('Validate Inputs') {
       steps {
-        script {
-          if (!params.REPOFLOW_PAT?.trim()) {
-            error('REPOFLOW_PAT is required')
-          }
-        }
+        echo 'Using Jenkins credential: repoflow-credentials'
       }
     }
 
     stage('npm') {
       steps {
         container('node') {
-          sh 'bash ci/test-npm.sh'
+          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
+            sh 'bash ci/test-npm.sh'
+          }
         }
       }
     }
@@ -98,7 +94,9 @@ spec:
     stage('pypi') {
       steps {
         container('python') {
-          sh 'bash ci/test-pypi.sh'
+          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
+            sh 'bash ci/test-pypi.sh'
+          }
         }
       }
     }
@@ -107,7 +105,9 @@ spec:
       steps {
         container('golang') {
           sh 'apt-get update >/dev/null && apt-get install -y git >/dev/null'
-          sh 'bash ci/test-go.sh'
+          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
+            sh 'bash ci/test-go.sh'
+          }
         }
       }
     }
@@ -116,7 +116,9 @@ spec:
       steps {
         container('helm') {
           sh 'apk add --no-cache bash curl tar gzip >/dev/null'
-          sh 'bash ci/test-helm.sh'
+          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
+            sh 'bash ci/test-helm.sh'
+          }
         }
       }
     }
@@ -125,7 +127,9 @@ spec:
       steps {
         container('helm') {
           sh 'apk add --no-cache bash curl tar gzip >/dev/null'
-          sh 'bash ci/test-universal.sh'
+          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
+            sh 'bash ci/test-universal.sh'
+          }
         }
       }
     }
@@ -136,7 +140,9 @@ spec:
       }
       steps {
         container('docker') {
-          sh 'bash ci/test-docker.sh'
+          withCredentials([usernamePassword(credentialsId: 'repoflow-credentials', usernameVariable: 'REPOFLOW_USER', passwordVariable: 'REPOFLOW_PAT')]) {
+            sh 'bash ci/test-docker.sh'
+          }
         }
       }
     }
