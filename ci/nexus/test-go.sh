@@ -7,15 +7,15 @@ trap 'rm -rf "$work"' EXIT
 cp -R "${REPO_ROOT}/packages/go" "$work/pkg"
 
 cat > "$work/.netrc" <<NETRC
-machine ${ARTI_HOST}
-login ${ARTI_USER}
-password ${ARTI_PASSWORD}
+machine ${NEXUS_HOST}
+login ${NEXUS_USER}
+password ${NEXUS_PASSWORD}
 NETRC
 chmod 600 "$work/.netrc"
 
 pushd "$work/pkg" >/dev/null
 export NETRC="$work/.netrc"
-export GOPROXY="${ARTI_BASE}/api/go/${ARTI_GO_VIRTUAL_REPO}"
+export GOPROXY="${NEXUS_BASE}/repository/${NEXUS_GO_PROXY_REPO}/"
 export GOSUMDB=off
 export GONOSUMDB='*'
 export GOPRIVATE='*'
@@ -24,4 +24,4 @@ go build -o "$work/go-smoke" ./cmd/smoke
 "$work/go-smoke" >/dev/null
 popd >/dev/null
 
-echo "artifactory go passed"
+echo "nexus go proxy passed"
